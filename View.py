@@ -20,9 +20,9 @@ class AppWindow(QMainWindow):
         self.buttons()
 
         # self.ui.adr_control.editingFinished.connect(self.writeAdr)
-        # self.ui.diff_speed_wind.editingFinished.connect(self.printSignal)
-        self.ui.diff_voltage.editingFinished.connect(self.writeKoef)
-        # self.ui.diff_humidity.editingFinished.connect(self.printSignal)
+        self.ui.diff_speed_wind.editingFinished.connect(self.writeKoefWind)
+        self.ui.diff_voltage.editingFinished.connect(self.writeKoefVolt)
+        self.ui.diff_humidity.editingFinished.connect(self.writeKoefHumi)
 
     def closeEvent(self, event):
         self.model.exitFind()
@@ -151,12 +151,31 @@ class AppWindow(QMainWindow):
             self.StatusBarMsg(str(e))
             print(str(e))
 
-    def writeKoef(self):
+    def writeKoefWind(self):
         try:
-            arr = []
-            arr.append(float(self.ui.diff_voltage.text()))
+            value = float(self.ui.diff_speed_wind.text())
+            start_adr = 4205
+            self.model.floatToByte(start_adr, value, self.model.struct.adr_dev)
+
+        except Exception as e:
+            self.StatusBarMsg(str(e))
+            print(str(e))
+
+    def writeKoefHumi(self):
+        try:
+            value = float(self.ui.diff_humidity.text())
+            start_adr = 4207
+            self.model.floatToByte(start_adr, value, self.model.struct.adr_dev)
+
+        except Exception as e:
+            self.StatusBarMsg(str(e))
+            print(str(e))
+
+    def writeKoefVolt(self):
+        try:
+            value = float(self.ui.diff_voltage.text())
             start_adr = 4211
-            self.model.startWriter('koef', start_adr, arr, self.model.struct.adr_dev)
+            self.model.floatToByte(start_adr, value, self.model.struct.adr_dev)
 
         except Exception as e:
             self.StatusBarMsg(str(e))

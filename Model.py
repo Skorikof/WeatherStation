@@ -1,4 +1,5 @@
 import serial
+from struct import pack, unpack
 from PyQt5.QtCore import QObject, QThreadPool, pyqtSignal
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from Threads import FindAdr, Reader, Writer
@@ -195,6 +196,7 @@ class Model:
         try:
             self.writer = Writer()
             self.writer.signals.write_adr.connect(self.writeAdr)
+            self.writer.signals.write_koef.connect(self.writeKoef)
             self.writer.signals.write_error.connect(self.writeError)
             self.writer.signals.write_log.connect(self.printLog)
             self.signals.startWrite.connect(self.writer.startThread)
@@ -222,7 +224,7 @@ class Model:
         self.signals.flag_adr.emit()
         self.pauseProg()
 
-    def writeKoef(self, data):
+    def writeKoef(self):
         self.stopWriter()
         self.pauseProg()
 
@@ -233,3 +235,25 @@ class Model:
 
     def pauseProg(self):
         self.signals.pauseProg.emit()
+
+    def floatToByte(self, start_adr, value, dev_id):
+        try:
+            val_d = float(value)
+            val_regs = []
+            b = pack('>f', val_d)
+            byt = []
+            byt.append(b[0])
+            byt.append(b[1])
+            val_d = int.from_bytes(byt, 'big', signed=False)
+            val_regs.append(val_d)
+            byt = []
+            byt.append(b[2])
+            byt.append(b[3])
+            val_d = int.from_bytes(byt, 'big', signed=False)
+            val_regs.append(val_d)
+
+            self.startWriter('koef', start_adr, val_regs, dev_id)
+
+        except Exception as e:
+            self.StatusBarMsg(str(e))
+            print(str(e))

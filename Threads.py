@@ -139,14 +139,10 @@ class Writer(QRunnable):
                         self.signals.write_adr.emit(self.values[0])
 
                     if self.tag == 'koef':
-                        arr = []
-                        temp = pack('f', self.values[0])
-                        arr.append(temp[:2])
-                        arr.append(temp[2:])
-                        rq = self.client.write_registers(self.start_adr, arr, unit=self.dev_id)
-                        txt_log = 'Коэффициент записан - {}'.format(self.values[0])
+                        rq = self.client.write_registers(self.start_adr, self.values, unit=self.dev_id)
+                        txt_log = 'Коэффициент записан'
                         self.signals.write_log.emit(txt_log)
-                        self.signals.write_koef.emit(self.values[0])
+                        self.signals.write_koef.emit()
 
             except Exception as e:
                 self.signals.write_error.emit(str(e))
