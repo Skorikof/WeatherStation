@@ -37,7 +37,6 @@ class WindowSignals(QObject):
     stbar_msg = pyqtSignal(str)
     finish_read = pyqtSignal()
     flag_adr = pyqtSignal()
-    pauseProg = pyqtSignal()
 
 
 class Model:
@@ -176,15 +175,15 @@ class Model:
                 data[3] = 0
             self.struct.scor_veter_adc = data[3]
             self.struct.himid_adc = data[4]
-            self.struct.adr_scor_veter = data[5]
-            self.struct.scor_veter_sr = data[6]
-            self.struct.himid = data[7]
-            self.struct.t_18b20 = data[8]
-            self.struct.k_scor_veter = data[9]
-            self.struct.cpar_himid = data[10]
-            self.struct.c_himid = data[11]
-            self.struct.k_upit = data[12]
-            self.struct.u_bat_d = data[13]
+            self.struct.adr_scor_veter = round(data[5], 2)
+            self.struct.scor_veter_sr = round(data[6], 2)
+            self.struct.himid = round(data[7], 2)
+            self.struct.t_18b20 = round(data[8], 2)
+            self.struct.k_scor_veter = round(data[9], 3)
+            self.struct.cpar_himid = round(data[10], 3)
+            self.struct.c_himid = round(data[11], 3)
+            self.struct.k_upit = round(data[12], 3)
+            self.struct.u_bat_d = round(data[13], 2)
 
             self.signals.finish_read.emit()
 
@@ -222,19 +221,14 @@ class Model:
         self.stopWriter()
         self.struct.adr_dev = data
         self.signals.flag_adr.emit()
-        self.pauseProg()
 
     def writeKoef(self):
         self.stopWriter()
-        self.pauseProg()
 
     def writeError(self, txt_log):
         self.stopWriter()
         self.StatusBarMsg(txt_log)
         print(txt_log)
-
-    def pauseProg(self):
-        self.signals.pauseProg.emit()
 
     def floatToByte(self, start_adr, value, dev_id):
         try:

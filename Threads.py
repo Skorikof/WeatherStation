@@ -97,7 +97,7 @@ class Reader(QRunnable):
                     self.signals.read_result.emit(temp_list)
                     txt_log = 'Данные получены ' + str(datetime.now())[:-3]
                     self.signals.read_log.emit(txt_log)
-                    time.sleep(0.1)
+                    time.sleep(0.5)
 
             except Exception as e:
                 self.signals.read_error.emit(str(e))
@@ -134,12 +134,14 @@ class Writer(QRunnable):
                 else:
                     if self.tag == 'adr':
                         rq = self.client.write_registers(self.start_adr, self.values[0], unit=self.dev_id)
+                        time.sleep(1)
                         txt_log = 'Адрес контроллера - {}'.format(self.values[0])
                         self.signals.write_log.emit(txt_log)
                         self.signals.write_adr.emit(self.values[0])
 
                     if self.tag == 'koef':
                         rq = self.client.write_registers(self.start_adr, self.values, unit=self.dev_id)
+                        time.sleep(1)
                         txt_log = 'Коэффициент записан'
                         self.signals.write_log.emit(txt_log)
                         self.signals.write_koef.emit()

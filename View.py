@@ -13,16 +13,15 @@ class AppWindow(QMainWindow):
         self.model.signals.stbar_msg.connect(self.StatusBarMsg)
         self.model.signals.finish_read.connect(self.fillUi)
         self.model.signals.flag_adr.connect(self.selectAdr)
-        self.model.signals.pauseProg.connect(self.pauseUi)
 
         self.com_port()
 
         self.buttons()
 
-        # self.ui.adr_control.editingFinished.connect(self.writeAdr)
-        self.ui.diff_speed_wind.editingFinished.connect(self.writeKoefWind)
-        self.ui.diff_voltage.editingFinished.connect(self.writeKoefVolt)
-        self.ui.diff_humidity.editingFinished.connect(self.writeKoefHumi)
+        self.ui.diff_speed_wind.returnPressed.connect(self.writeKoefWind)
+        self.ui.diff_voltage.returnPressed.connect(self.writeKoefVolt)
+        self.ui.diff_humidity.returnPressed.connect(self.writeKoefHumi)
+        self.ui.diff_voltage.selectionChanged.connect(self.printSignal)
 
     def closeEvent(self, event):
         self.model.exitFind()
@@ -204,16 +203,7 @@ class AppWindow(QMainWindow):
             self.StatusBarMsg(str(e))
             print(str(e))
 
-    def pauseUi(self):
-        try:
-            self.ui.write_adr_btn.setEnabled(False)
-            self.ui.find_addr_btn.setEnabled(False)
-            self.ui.read_base_btn.setEnabled(False)
-            time.sleep(1)
-            self.ui.write_adr_btn.setEnabled(True)
-            self.ui.find_addr_btn.setEnabled(True)
-            self.ui.read_base_btn.setEnabled(True)
-
-        except Exception as e:
-            self.StatusBarMsg(str(e))
-            print(str(e))
+    def printSignal(self):
+        self.model.stopRead()
+        time.sleep(1)
+        self.model.startRead()
