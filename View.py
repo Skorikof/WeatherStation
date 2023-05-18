@@ -21,7 +21,7 @@ class AppWindow(QMainWindow):
         self.ui.diff_speed_wind.returnPressed.connect(self.writeKoefWind)
         self.ui.diff_voltage.returnPressed.connect(self.writeKoefVolt)
         self.ui.diff_humidity.returnPressed.connect(self.writeKoefHumi)
-        self.ui.diff_voltage.selectionChanged.connect(self.printSignal)
+
 
     def closeEvent(self, event):
         self.model.exitFind()
@@ -204,6 +204,9 @@ class AppWindow(QMainWindow):
             print(str(e))
 
     def printSignal(self):
+        print('Signal')
         self.model.stopRead()
+        print('Reader stopped')
         time.sleep(1)
         self.model.startRead()
+        print('Reader started')
