@@ -12,7 +12,6 @@ class AppWindow(QMainWindow):
 
         self.model.signals.stbar_msg.connect(self.StatusBarMsg)
         self.model.signals.finish_read.connect(self.fillUi)
-        self.model.signals.flag_adr.connect(self.selectAdr)
 
         self.com_port()
 
@@ -121,11 +120,12 @@ class AppWindow(QMainWindow):
             self.ui.speed_wind_avarage.setText(str(self.model.struct.scor_veter_sr))
             self.ui.humidity.setText(str(self.model.struct.himid))
             self.ui.temp_ds18b20.setText(str(self.model.struct.t_18b20))
-            self.ui.diff_speed_wind.setText(str(self.model.struct.k_scor_veter))
-            self.ui.diff_humidity.setText(str(self.model.struct.cpar_himid))
             self.ui.calc_humidity.setText(str(self.model.struct.c_himid))
-            self.ui.diff_voltage.setText(str(self.model.struct.k_upit))
             self.ui.voltage.setText(str(self.model.struct.u_bat_d))
+            if self.model.tag_read == 'with_koef':
+                self.ui.diff_speed_wind.setText(str(self.model.struct.k_scor_veter))
+                self.ui.diff_humidity.setText(str(self.model.struct.cpar_himid))
+                self.ui.diff_voltage.setText(str(self.model.struct.k_upit))
 
         except Exception as e:
             self.StatusBarMsg(str(e))
@@ -142,19 +142,14 @@ class AppWindow(QMainWindow):
             self.StatusBarMsg(str(e))
             print(str(e))
 
-    def selectAdr(self):
-        try:
-            self.ui.adr_control_start.setText(str(self.model.struct.adr_dev))
-
-        except Exception as e:
-            self.StatusBarMsg(str(e))
-            print(str(e))
-
     def writeKoefWind(self):
         try:
+            self.model.stopRead()
             value = float(self.ui.diff_speed_wind.text())
             start_adr = 4205
             self.model.floatToByte(start_adr, value, self.model.struct.adr_dev)
+            self.model.read_koef = True
+            self.model.startRead()
 
         except Exception as e:
             self.StatusBarMsg(str(e))
@@ -162,9 +157,12 @@ class AppWindow(QMainWindow):
 
     def writeKoefHumi(self):
         try:
+            self.model.stopRead()
             value = float(self.ui.diff_humidity.text())
             start_adr = 4207
             self.model.floatToByte(start_adr, value, self.model.struct.adr_dev)
+            self.model.read_koef = True
+            self.model.startRead()
 
         except Exception as e:
             self.StatusBarMsg(str(e))
@@ -172,9 +170,12 @@ class AppWindow(QMainWindow):
 
     def writeKoefVolt(self):
         try:
+            self.model.stopRead()
             value = float(self.ui.diff_voltage.text())
             start_adr = 4211
             self.model.floatToByte(start_adr, value, self.model.struct.adr_dev)
+            self.model.read_koef = True
+            self.model.startRead()
 
         except Exception as e:
             self.StatusBarMsg(str(e))
@@ -193,11 +194,12 @@ class AppWindow(QMainWindow):
             self.ui.speed_wind_avarage.clear()
             self.ui.humidity.clear()
             self.ui.temp_ds18b20.clear()
-            self.ui.diff_speed_wind.clear()
-            self.ui.diff_humidity.clear()
             self.ui.calc_humidity.clear()
-            self.ui.diff_voltage.clear()
             self.ui.voltage.clear()
+            if self.model.tag_read == 'with_koef':
+                self.ui.diff_speed_wind.clear()
+                self.ui.diff_humidity.clear()
+                self.ui.diff_voltage.clear()
 
         except Exception as e:
             self.StatusBarMsg(str(e))

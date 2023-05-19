@@ -8,7 +8,7 @@ class Signals(QObject):
     find_result = pyqtSignal(int)
     find_log = pyqtSignal(str)
     find_error = pyqtSignal(str)
-    read_result = pyqtSignal(list)
+    read_result = pyqtSignal(str, list)
     read_error = pyqtSignal(str)
     read_log = pyqtSignal(str)
     write_adr = pyqtSignal(int)
@@ -68,6 +68,8 @@ class Reader(QRunnable):
         super(Reader, self).__init__()
         self.cycle = True
         self.is_run = False
+        self.read_koef = True
+        self.tag = 'without_koef'
 
     @pyqtSlot()
     def run(self):
@@ -85,16 +87,54 @@ class Reader(QRunnable):
                     else:
                         self.signals.read_error.emit(str(rr))
 
-                    rr = self.client.read_holding_registers(4197, 18, unit=self.dev_id)
+                    rr = self.client.read_holding_registers(4197, 8, unit=self.dev_id)
                     if not rr.isError():
-                        for i in range(0, 18, 2):
+                        for i in range(0, 8, 2):
                             temp_u = unpack('f', pack('<HH', rr.registers[i + 1], rr.registers[i]))[0]
                             temp_list.append(temp_u)
 
                     else:
                         self.signals.read_error.emit(str(rr))
 
-                    self.signals.read_result.emit(temp_list)
+                    rr = self.client.read_holding_registers(4209, 2, unit=self.dev_id)
+                    if not rr.isError():
+                        temp_u = unpack('f', pack('<HH', rr.registers[1], rr.registers[0]))[0]
+                        temp_list.append(temp_u)
+
+                    else:
+                        self.signals.read_error.emit(str(rr))
+
+                    rr = self.client.read_holding_registers(4213, 2, unit=self.dev_id)
+                    if not rr.isError():
+                        temp_u = unpack('f', pack('<HH', rr.registers[1], rr.registers[0]))[0]
+                        temp_list.append(temp_u)
+
+                    else:
+                        self.signals.read_error.emit(str(rr))
+                    self.tag = 'without_koef'
+
+                    if self.read_koef:
+                        rr = self.client.read_holding_registers(4205, 4, unit=self.dev_id)
+                        if not rr.isError():
+                            temp_u = unpack('f', pack('<HH', rr.registers[1], rr.registers[0]))[0]
+                            temp_list.append(temp_u)
+                            temp_u = unpack('f', pack('<HH', rr.registers[3], rr.registers[2]))[0]
+                            temp_list.append(temp_u)
+
+                        else:
+                            self.signals.read_error.emit(str(rr))
+
+                        rr = self.client.read_holding_registers(4211, 2, unit=self.dev_id)
+                        if not rr.isError():
+                            temp_u = unpack('f', pack('<HH', rr.registers[1], rr.registers[0]))[0]
+                            temp_list.append(temp_u)
+                            self.read_koef = False
+                            self.tag = 'with_koef'
+
+                        else:
+                            self.signals.read_error.emit(str(rr))
+
+                    self.signals.read_result.emit(self.tag, temp_list)
                     txt_log = 'Данные получены ' + str(datetime.now())[:-3]
                     self.signals.read_log.emit(txt_log)
                     time.sleep(0.5)
@@ -102,9 +142,10 @@ class Reader(QRunnable):
             except Exception as e:
                 self.signals.read_error.emit(str(e))
 
-    def startThread(self, client, dev_id):
+    def startThread(self, client, dev_id, read_koef):
         self.client = client
         self.dev_id = dev_id
+        self.read_koef = read_koef
         self.is_run = True
 
     def stopThread(self):

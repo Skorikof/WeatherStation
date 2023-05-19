@@ -28,7 +28,7 @@ class WindowSignals(QObject):
     startFind = pyqtSignal(object)
     stopFind = pyqtSignal()
     exitFind = pyqtSignal()
-    startRead = pyqtSignal(object, int)
+    startRead = pyqtSignal(object, int, bool)
     stopRead = pyqtSignal()
     exitRead = pyqtSignal()
     startWrite = pyqtSignal(object, str, int, list, int)
@@ -36,7 +36,6 @@ class WindowSignals(QObject):
     exitWrite = pyqtSignal()
     stbar_msg = pyqtSignal(str)
     finish_read = pyqtSignal()
-    flag_adr = pyqtSignal()
 
 
 class Model:
@@ -44,6 +43,8 @@ class Model:
         self.struct = StructController()
         self.com_port = ''
         self.flag_connect = False
+        self.tag_read = ''
+        self.read_koef = True
         self.signals = WindowSignals()
         self.threadpool = QThreadPool()
 
@@ -152,7 +153,7 @@ class Model:
             print(str(e))
 
     def startRead(self):
-        self.signals.startRead.emit(self.client, self.struct.adr_dev)
+        self.signals.startRead.emit(self.client, self.struct.adr_dev, self.read_koef)
 
     def stopRead(self):
         self.signals.stopRead.emit()
@@ -166,8 +167,9 @@ class Model:
         self.StatusBarMsg(txt_log)
         print(txt_log)
 
-    def readResult(self, data):
+    def readResult(self, tag, data):
         try:
+            self.tag_read = tag
             self.struct.napr_veter_adc = data[0]
             self.struct.napr_veter_gr = data[1]
             self.struct.napr_veter_sr = data[2]
@@ -179,11 +181,12 @@ class Model:
             self.struct.scor_veter_sr = round(data[6], 2)
             self.struct.himid = round(data[7], 2)
             self.struct.t_18b20 = round(data[8], 2)
-            self.struct.k_scor_veter = round(data[9], 3)
-            self.struct.cpar_himid = round(data[10], 3)
-            self.struct.c_himid = round(data[11], 3)
-            self.struct.k_upit = round(data[12], 3)
-            self.struct.u_bat_d = round(data[13], 2)
+            self.struct.c_himid = round(data[9], 3)
+            self.struct.u_bat_d = round(data[10], 2)
+            if self.tag_read == 'with_koef':
+                self.struct.k_scor_veter = round(data[11], 3)
+                self.struct.cpar_himid = round(data[12], 3)
+                self.struct.k_upit = round(data[13], 3)
 
             self.signals.finish_read.emit()
 
@@ -220,7 +223,6 @@ class Model:
     def writeAdr(self, data):
         self.stopWriter()
         self.struct.adr_dev = data
-        self.signals.flag_adr.emit()
 
     def writeKoef(self):
         self.stopWriter()
