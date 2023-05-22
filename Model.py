@@ -1,5 +1,5 @@
 import serial
-from struct import pack, unpack
+from struct import pack
 from PyQt5.QtCore import QObject, QThreadPool, pyqtSignal
 from pymodbus.client.sync import ModbusSerialClient as ModbusClient
 from Threads import FindAdr, Reader, Writer
@@ -36,6 +36,7 @@ class WindowSignals(QObject):
     exitWrite = pyqtSignal()
     stbar_msg = pyqtSignal(str)
     finish_read = pyqtSignal()
+    flag_adr = pyqtSignal()
 
 
 class Model:
@@ -127,6 +128,7 @@ class Model:
 
     def findResult(self, data):
         self.struct.adr_dev = data
+        self.stopFind()
         self.signals.flag_adr.emit()
 
     def findError(self, data):
@@ -221,7 +223,6 @@ class Model:
         self.signals.exitWrite.emit()
 
     def writeAdr(self, data):
-        self.stopWriter()
         self.struct.adr_dev = data
 
     def writeKoef(self):

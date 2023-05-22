@@ -40,7 +40,7 @@ class FindAdr(QRunnable):
                             self.signals.find_result.emit(rr.registers[0])
                             self.txt_log = 'Адрес контроллера определён - {}'.format(i)
                             self.signals.find_log.emit(self.txt_log)
-                            self.stopThread()
+                            self.find_is_run = False
                             break
 
                         else:
@@ -186,6 +186,7 @@ class Writer(QRunnable):
                         txt_log = 'Коэффициент записан'
                         self.signals.write_log.emit(txt_log)
                         self.signals.write_koef.emit()
+                    self.is_run = False
 
             except Exception as e:
                 self.signals.write_error.emit(str(e))

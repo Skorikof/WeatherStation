@@ -12,6 +12,7 @@ class AppWindow(QMainWindow):
 
         self.model.signals.stbar_msg.connect(self.StatusBarMsg)
         self.model.signals.finish_read.connect(self.fillUi)
+        self.model.signals.flag_adr.connect(self.findAdr)
 
         self.com_port()
 
@@ -87,6 +88,15 @@ class AppWindow(QMainWindow):
                 self.ui.write_adr_btn.setEnabled(False)
                 self.ui.find_addr_btn.setEnabled(False)
                 self.ui.read_base_btn.setEnabled(False)
+
+        except Exception as e:
+            self.StatusBarMsg(str(e))
+            print(str(e))
+
+    def findAdr(self):
+        try:
+            self.ui.adr_control_start.setText(str(self.model.struct.adr_dev))
+            self.ui.adr_control.setText(str(self.model.struct.adr_dev))
 
         except Exception as e:
             self.StatusBarMsg(str(e))
@@ -196,10 +206,9 @@ class AppWindow(QMainWindow):
             self.ui.temp_ds18b20.clear()
             self.ui.calc_humidity.clear()
             self.ui.voltage.clear()
-            if self.model.tag_read == 'with_koef':
-                self.ui.diff_speed_wind.clear()
-                self.ui.diff_humidity.clear()
-                self.ui.diff_voltage.clear()
+            self.ui.diff_speed_wind.clear()
+            self.ui.diff_humidity.clear()
+            self.ui.diff_voltage.clear()
 
         except Exception as e:
             self.StatusBarMsg(str(e))
