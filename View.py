@@ -71,23 +71,23 @@ class AppWindow(QMainWindow):
             temp = self.ui.connect_btn.text()
             if temp == 'Подключиться':
                 self.model.initClient()
-                self.ui.connect_btn.setText('Отключиться')
+                if self.model.flag_connect:
+                    self.ui.read_base_btn.setText('Читать')
+                    self.ui.connect_btn.setText('Отключиться')
+                    self.ui.adr_control_start.setText(str(self.model.struct.adr_dev))
+                    self.ui.write_adr_btn.setEnabled(True)
+                    self.ui.find_addr_btn.setEnabled(True)
+                    self.ui.read_base_btn.setEnabled(True)
 
             elif temp == 'Отключиться':
                 self.model.stopClient()
-                self.ui.connect_btn.setText('Подключиться')
-
-            if self.model.flag_connect:
-                self.ui.adr_control_start.setText(str(self.model.struct.adr_dev))
-                self.ui.write_adr_btn.setEnabled(True)
-                self.ui.find_addr_btn.setEnabled(True)
-                self.ui.read_base_btn.setEnabled(True)
-
-            elif not self.model.flag_connect:
-                self.clearUi()
-                self.ui.write_adr_btn.setEnabled(False)
-                self.ui.find_addr_btn.setEnabled(False)
-                self.ui.read_base_btn.setEnabled(False)
+                if not self.model.flag_connect:
+                    self.ui.read_base_btn.setText('Остановить')
+                    self.ui.connect_btn.setText('Подключиться')
+                    self.clearUi()
+                    self.ui.write_adr_btn.setEnabled(False)
+                    self.ui.find_addr_btn.setEnabled(False)
+                    self.ui.read_base_btn.setEnabled(False)
 
         except Exception as e:
             self.StatusBarMsg(str(e))

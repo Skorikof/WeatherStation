@@ -101,6 +101,9 @@ class Model:
         self.flag_connect = False
         txt_bar = 'Контроллер отключен'
         self.StatusBarMsg(txt_bar)
+        self.stopFind()
+        self.stopRead()
+        self.stopWriter()
 
     def initFindAdr(self):
         try:
