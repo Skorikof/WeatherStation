@@ -6,20 +6,20 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>770</width>
-    <height>700</height>
+    <width>810</width>
+    <height>640</height>
    </rect>
   </property>
   <property name="minimumSize">
    <size>
     <width>770</width>
-    <height>700</height>
+    <height>640</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>810</width>
-    <height>700</height>
+    <width>880</width>
+    <height>640</height>
    </size>
   </property>
   <property name="windowTitle">
@@ -31,15 +31,18 @@
      <number>10</number>
     </property>
     <property name="topMargin">
-     <number>10</number>
+     <number>5</number>
     </property>
     <property name="rightMargin">
-     <number>10</number>
+     <number>20</number>
     </property>
     <property name="bottomMargin">
-     <number>10</number>
+     <number>5</number>
     </property>
-    <property name="spacing">
+    <property name="horizontalSpacing">
+     <number>20</number>
+    </property>
+    <property name="verticalSpacing">
      <number>10</number>
     </property>
     <item row="6" column="0" colspan="4">
@@ -164,13 +167,13 @@
       <property name="minimumSize">
        <size>
         <width>90</width>
-        <height>30</height>
+        <height>40</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>90</width>
-        <height>30</height>
+        <height>40</height>
        </size>
       </property>
       <property name="font">
@@ -873,14 +876,14 @@
      <widget class="QLineEdit" name="adr_control_start">
       <property name="minimumSize">
        <size>
-        <width>50</width>
-        <height>30</height>
+        <width>60</width>
+        <height>40</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>50</width>
-        <height>30</height>
+        <width>60</width>
+        <height>40</height>
        </size>
       </property>
       <property name="font">
@@ -936,13 +939,13 @@
       <property name="minimumSize">
        <size>
         <width>180</width>
-        <height>30</height>
+        <height>40</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>180</width>
-        <height>30</height>
+        <height>40</height>
        </size>
       </property>
       <property name="font">
@@ -1020,13 +1023,13 @@
       <property name="minimumSize">
        <size>
         <width>90</width>
-        <height>30</height>
+        <height>40</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>90</width>
-        <height>30</height>
+        <height>40</height>
        </size>
       </property>
       <property name="font">
@@ -1044,20 +1047,20 @@
      <widget class="QPushButton" name="connect_btn">
       <property name="minimumSize">
        <size>
-        <width>120</width>
-        <height>30</height>
+        <width>150</width>
+        <height>40</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
-        <width>120</width>
-        <height>30</height>
+        <width>150</width>
+        <height>40</height>
        </size>
       </property>
       <property name="font">
        <font>
         <family>Arial</family>
-        <pointsize>12</pointsize>
+        <pointsize>14</pointsize>
        </font>
       </property>
       <property name="text">
@@ -1070,13 +1073,13 @@
       <property name="minimumSize">
        <size>
         <width>150</width>
-        <height>30</height>
+        <height>40</height>
        </size>
       </property>
       <property name="maximumSize">
        <size>
         <width>150</width>
-        <height>30</height>
+        <height>40</height>
        </size>
       </property>
       <property name="font">
