@@ -187,7 +187,7 @@ class Writer(QRunnable):
                         txt_log = 'Коэффициент записан'
                         self.signals.write_log.emit(txt_log)
                         self.signals.write_koef.emit()
-                    rq = self.client.write_registers(2, 5040, unit=self.dev_id)
+                    rq = self.client.write_registers(2, 65535, unit=self.dev_id)
                     self.is_run = False
 
             except Exception as e:
