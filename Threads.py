@@ -173,6 +173,7 @@ class Writer(QRunnable):
                 if not self.is_run:
                     time.sleep(0.01)
                 else:
+                    rq = self.client.write_registers(2, 5046, unit=self.dev_id)
                     if self.tag == 'adr':
                         rq = self.client.write_registers(self.start_adr, self.values[0], unit=self.dev_id)
                         time.sleep(1)
@@ -186,6 +187,7 @@ class Writer(QRunnable):
                         txt_log = 'Коэффициент записан'
                         self.signals.write_log.emit(txt_log)
                         self.signals.write_koef.emit()
+                    rq = self.client.write_registers(2, 5040, unit=self.dev_id)
                     self.is_run = False
 
             except Exception as e:
