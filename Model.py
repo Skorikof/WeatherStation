@@ -1,7 +1,7 @@
-import serial
+import serial.tools.list_ports
 from struct import pack
 from PyQt5.QtCore import QObject, QThreadPool, pyqtSignal
-from pymodbus.client.sync import ModbusSerialClient as ModbusClient
+from pymodbus.client import ModbusSerialClient as ModbusClient
 from Threads import FindAdr, Reader, Writer
 
 
@@ -57,15 +57,9 @@ class Model:
     def port_scan(self):
         try:
             result = []
-            ports = ['COM{}'.format(i + 1) for i in range(256)]
+            ports = serial.tools.list_ports.comports()
             for port in ports:
-                try:
-                    s = serial.Serial(port)
-                    s.close()
-                    result.append(port)
-
-                except:
-                    pass
+                result.append(port.device)
 
             return result
 

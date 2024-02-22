@@ -35,7 +35,7 @@ class FindAdr(QRunnable):
                     self.txt_log = 'Определение адреса контроллера..'
                     self.signals.find_log.emit(self.txt_log)
                     for i in range(1, 33):
-                        rr = self.client.read_holding_registers(0, 1, unit=i)
+                        rr = self.client.read_holding_registers(0, 1, slave=i)
                         if not rr.isError():
                             self.signals.find_result.emit(rr.registers[0])
                             self.txt_log = 'Адрес контроллера определён - {}'.format(i)
@@ -79,7 +79,7 @@ class Reader(QRunnable):
                     time.sleep(0.01)
                 else:
                     temp_list = []
-                    rr = self.client.read_holding_registers(4192, 5, unit=self.dev_id)
+                    rr = self.client.read_holding_registers(4192, 5, slave=self.dev_id)
                     if not rr.isError():
                         for i in range(5):
                             temp_list.append(rr.registers[i])
@@ -87,7 +87,7 @@ class Reader(QRunnable):
                     else:
                         self.signals.read_error.emit(str(rr))
 
-                    rr = self.client.read_holding_registers(4197, 8, unit=self.dev_id)
+                    rr = self.client.read_holding_registers(4197, 8, slave=self.dev_id)
                     if not rr.isError():
                         for i in range(0, 8, 2):
                             temp_u = unpack('f', pack('<HH', rr.registers[i + 1], rr.registers[i]))[0]
@@ -96,7 +96,7 @@ class Reader(QRunnable):
                     else:
                         self.signals.read_error.emit(str(rr))
 
-                    rr = self.client.read_holding_registers(4209, 2, unit=self.dev_id)
+                    rr = self.client.read_holding_registers(4209, 2, slave=self.dev_id)
                     if not rr.isError():
                         temp_u = unpack('f', pack('<HH', rr.registers[1], rr.registers[0]))[0]
                         temp_list.append(temp_u)
@@ -104,7 +104,7 @@ class Reader(QRunnable):
                     else:
                         self.signals.read_error.emit(str(rr))
 
-                    rr = self.client.read_holding_registers(4213, 2, unit=self.dev_id)
+                    rr = self.client.read_holding_registers(4213, 2, slave=self.dev_id)
                     if not rr.isError():
                         temp_u = unpack('f', pack('<HH', rr.registers[1], rr.registers[0]))[0]
                         temp_list.append(temp_u)
@@ -114,7 +114,7 @@ class Reader(QRunnable):
                     self.tag = 'without_koef'
 
                     if self.read_koef:
-                        rr = self.client.read_holding_registers(4205, 4, unit=self.dev_id)
+                        rr = self.client.read_holding_registers(4205, 4, slave=self.dev_id)
                         if not rr.isError():
                             temp_u = unpack('f', pack('<HH', rr.registers[1], rr.registers[0]))[0]
                             temp_list.append(temp_u)
@@ -124,7 +124,7 @@ class Reader(QRunnable):
                         else:
                             self.signals.read_error.emit(str(rr))
 
-                        rr = self.client.read_holding_registers(4211, 2, unit=self.dev_id)
+                        rr = self.client.read_holding_registers(4211, 2, slave=self.dev_id)
                         if not rr.isError():
                             temp_u = unpack('f', pack('<HH', rr.registers[1], rr.registers[0]))[0]
                             temp_list.append(temp_u)
@@ -173,17 +173,17 @@ class Writer(QRunnable):
                 if not self.is_run:
                     time.sleep(0.01)
                 else:
-                    rq = self.client.write_registers(2, 5046, unit=self.dev_id)
+                    rq = self.client.write_registers(2, 5046, slave=self.dev_id)
                     if self.tag == 'adr':
-                        rq = self.client.write_registers(self.start_adr, self.values[0], unit=self.dev_id)
-                        time.sleep(1)
+                        rq = self.client.write_registers(self.start_adr, self.values[0], slave=self.dev_id)
+                        time.sleep(0.1)
                         txt_log = 'Адрес контроллера - {}'.format(self.values[0])
                         self.signals.write_log.emit(txt_log)
                         self.signals.write_adr.emit(self.values[0])
 
                     if self.tag == 'koef':
-                        rq = self.client.write_registers(self.start_adr, self.values, unit=self.dev_id)
-                        time.sleep(1)
+                        rq = self.client.write_registers(self.start_adr, self.values, slave=self.dev_id)
+                        time.sleep(0.1)
                         txt_log = 'Коэффициент записан'
                         self.signals.write_log.emit(txt_log)
                         self.signals.write_koef.emit()
