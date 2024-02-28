@@ -11,6 +11,17 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
+class MyLineEdit(QtWidgets.QLineEdit):
+    clicked = QtCore.pyqtSignal()
+
+    def __init__(self, *args):
+        QtWidgets.QLineEdit.__init__(self, *args)
+
+    def mousePressEvent(self, QMouseEvent):
+        self.clicked.emit()
+        QtWidgets.QLineEdit.mousePressEvent(self, QMouseEvent)
+
+
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -379,7 +390,9 @@ class Ui_MainWindow(object):
         self.voltage.setReadOnly(True)
         self.voltage.setObjectName("voltage")
         self.gridLayout.addWidget(self.voltage, 11, 4, 1, 1)
-        self.diff_speed_wind = QtWidgets.QLineEdit(self.centralwidget)
+
+        # self.diff_speed_wind = QtWidgets.QLineEdit(self.centralwidget)
+        self.diff_speed_wind = MyLineEdit(self.centralwidget)
         self.diff_speed_wind.setMinimumSize(QtCore.QSize(100, 40))
         self.diff_speed_wind.setMaximumSize(QtCore.QSize(100, 40))
         font = QtGui.QFont()
@@ -390,7 +403,9 @@ class Ui_MainWindow(object):
         self.diff_speed_wind.setAlignment(QtCore.Qt.AlignCenter)
         self.diff_speed_wind.setObjectName("diff_speed_wind")
         self.gridLayout.addWidget(self.diff_speed_wind, 12, 4, 1, 1)
-        self.diff_humidity = QtWidgets.QLineEdit(self.centralwidget)
+
+        # self.diff_humidity = QtWidgets.QLineEdit(self.centralwidget)
+        self.diff_humidity = MyLineEdit(self.centralwidget)
         self.diff_humidity.setMinimumSize(QtCore.QSize(100, 40))
         self.diff_humidity.setMaximumSize(QtCore.QSize(100, 40))
         font = QtGui.QFont()
@@ -401,7 +416,9 @@ class Ui_MainWindow(object):
         self.diff_humidity.setAlignment(QtCore.Qt.AlignCenter)
         self.diff_humidity.setObjectName("diff_humidity")
         self.gridLayout.addWidget(self.diff_humidity, 13, 4, 1, 1)
-        self.diff_voltage = QtWidgets.QLineEdit(self.centralwidget)
+
+        # self.diff_voltage = QtWidgets.QLineEdit(self.centralwidget)
+        self.diff_voltage = MyLineEdit(self.centralwidget)
         self.diff_voltage.setMinimumSize(QtCore.QSize(100, 40))
         self.diff_voltage.setMaximumSize(QtCore.QSize(100, 40))
         font = QtGui.QFont()
@@ -427,31 +444,22 @@ class Ui_MainWindow(object):
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "Контроллер метеостанции"))
-        self.label_4.setText(_translate("MainWindow", "Направление ветра\n"
-"в градусах"))
+        self.label_4.setText(_translate("MainWindow", "Направление ветра\nв градусах"))
         self.label.setText(_translate("MainWindow", "Адрес контроллера"))
         self.find_addr_btn.setText(_translate("MainWindow", "Определить адрес"))
         self.write_adr_btn.setText(_translate("MainWindow", "Записать"))
         self.connect_btn.setText(_translate("MainWindow", "Подключиться"))
         self.read_base_btn.setText(_translate("MainWindow", "Читать"))
         self.label_6.setText(_translate("MainWindow", "Скорость ветра"))
-        self.label_3.setText(_translate("MainWindow", "Направление ветра\n"
-"в битах АЦП"))
-        self.label_5.setText(_translate("MainWindow", "Усреднённое направление\n"
-"ветрав градусах"))
-        self.label_9.setText(_translate("MainWindow", "Скорость ветра\n"
-"средняя за 10 мин, м/с"))
-        self.label_7.setText(_translate("MainWindow", "Счётчик датчика\n"
-"влажности"))
-        self.label_14.setText(_translate("MainWindow", "Вычисленная ёмкость\n"
-"датчика влажности"))
+        self.label_3.setText(_translate("MainWindow", "Направление ветра\nв битах АЦП"))
+        self.label_5.setText(_translate("MainWindow", "Усреднённое направление\nветрав градусах"))
+        self.label_9.setText(_translate("MainWindow", "Скорость ветра\nсредняя за 10 мин, м/с"))
+        self.label_7.setText(_translate("MainWindow", "Счётчик датчика\nвлажности"))
+        self.label_14.setText(_translate("MainWindow", "Вычисленная ёмкость\nдатчика влажности"))
         self.label_8.setText(_translate("MainWindow", "Скорость ветра, м/с"))
         self.label_10.setText(_translate("MainWindow", "Влажность, %"))
-        self.label_11.setText(_translate("MainWindow", "Температура с датчика\n"
-" DS18B20 в градусах"))
+        self.label_11.setText(_translate("MainWindow", "Температура с датчика\n DS18B20 в градусах"))
         self.label_16.setText(_translate("MainWindow", "Напряжение батареи"))
         self.label_12.setText(_translate("MainWindow", "Поправка скорости ветра"))
-        self.label_13.setText(_translate("MainWindow", "Паразитная ёмкость\n"
-"датчика влажности"))
-        self.label_15.setText(_translate("MainWindow", "Поправка напряжения\n"
-"питания"))
+        self.label_13.setText(_translate("MainWindow", "Паразитная ёмкость\nдатчика влажности"))
+        self.label_15.setText(_translate("MainWindow", "Поправка напряжения\nпитания"))
