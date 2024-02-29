@@ -49,6 +49,7 @@ class Model:
         self.writer = None
         self.flag_init_write = False
         self.find_adr = None
+        self.flag_init_adr = False
 
         self.signals = WindowSignals()
         self.threadpool = QThreadPool()
@@ -180,10 +181,13 @@ class Model:
             print(str(e))
 
     def find_adr_meteo(self):
+        self.stop_read()
         client = self.settings.get('client')
         self.find_adr = FindAdr(client=client)
-        self.find_adr.signals.thread_log.connect(self.thread_log)
-        self.find_adr.signals.find_result.connect(self.find_adr_result)
+        if not self.flag_init_adr:
+            self.find_adr.signals.thread_log.connect(self.thread_log)
+            self.find_adr.signals.find_result.connect(self.find_adr_result)
+            self.flag_init_adr = True
         self.threadpool.start(self.find_adr)
 
     def find_adr_result(self, data):

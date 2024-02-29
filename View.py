@@ -79,6 +79,8 @@ class AppWindow(QMainWindow):
             adr_dev = str(self.model.settings['dev_id'])
             self.ui.adr_control_start.setText(adr_dev)
             self.ui.adr_control.setText(adr_dev)
+            self.model.start_read()
+            self.start_read_ui()
 
         except Exception as e:
             txt_log = 'ERROR in view/find_adr_ui - {}'.format(e)
