@@ -856,7 +856,7 @@
        </font>
       </property>
       <property name="text">
-       <string>Напряжение батареи</string>
+       <string>Напряжение питания</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
